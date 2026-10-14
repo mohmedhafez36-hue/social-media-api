@@ -1,0 +1,13 @@
+import bycrypt from 'bcrypt';
+const SALT_ROUNDS = 10;
+
+export const hashPassword = async(password:string): Promise<string> => {
+    return await bycrypt.hash(password , SALT_ROUNDS)
+}
+
+export const comparePassword = async (
+    password:string,
+    hashedPassword:string
+): Promise<boolean> => {
+    return await bycrypt.compare(password , hashedPassword)
+};

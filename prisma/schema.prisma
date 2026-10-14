@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+enum LikeStatus {
+  LOVE
+  FUNNY
+  SAD
+  LIKE
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  userId    String    @id @default(uuid())
+  userName  String
+  email     String    @unique
+  password  String
+  role      Role      @default(USER)
+  birthDate DateTime
+  createdAt DateTime  @default(now())
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  refreshTokens RefreshToken[]
+
+  @@index([email])
+}
+
+model Post {
+  postId   String @id @default(uuid())
+  title    String
+  postBody String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId   String
+  author   User      @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  comments Comment[]
+  likes    Like[]
+}
+
+model Comment {
+  commentId   String @id @default(uuid())
+  commentBody String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [postId], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model Like {
+  likeId   String     @id @default(uuid())
+  likeType LikeStatus
+  userId   String
+  user     User   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  postId   String
+  post     Post   @relation(fields: [postId], references: [postId], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
