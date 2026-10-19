@@ -17,6 +17,45 @@ import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
+/**
+ * @openapi
+ * /api/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userName
+ *               - email
+ *               - password
+ *               - birthDate
+ *             properties:
+ *               userName:
+ *                 type: string
+ *                 example: mohamed
+ *               email:
+ *                 type: string
+ *                 example: mohamed@example.com
+ *               password:
+ *                 type: string
+ *                 example: Password123
+ *               birthDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2004-05-20"
+ *     responses:
+ *       "201":
+ *         description: User created successfully
+ *       "400":
+ *         description: Invalid input
+ */
+router.post("/register", register);
+
 router.post("/register", validate(createUserSchema), register);
 router.post("/login" , loginRateLimiter , validate(loginSchema) , login);
 router.post("/refresh" , auth_refresh);
