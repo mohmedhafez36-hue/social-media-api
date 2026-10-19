@@ -55,6 +55,49 @@ const router = Router();
  *         description: Invalid input
  */
 router.post("/register", validate(createUserSchema), register);
+
+
+/**
+ * @openapi
+ * /api/login:
+ *   post:
+ *     summary: Login an existing user
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       "200":
+ *         description: Login successful. Authentication cookies are set
+ *         headers:
+ *          Set-cookie:
+ *            description:
+ *              Sets the authentication cookies.
+ *              HttpOnly cookies are not accessible to javeScript.
+ *            schema:
+ *              type: string
+ *              example: "accessToken=...; HttpOnly; Path=/ SameSite=Lax"
+ * 
+ *       "401":
+ *         description: Wrong email or password
+ *       "429":
+ *         description: Too many login attempts from this IP. Please try again after 15 minutes.
+ */
+
 router.post("/login" , loginRateLimiter , validate(loginSchema) , login);
 router.post("/refresh" , auth_refresh);
 router.patch("/change_password" , authenticate , validate(changePasswordSchema) ,  change_password);
