@@ -48,7 +48,7 @@ const swaggerOptions = {
         ],
     },
     // المسارات التي تحتوي على التعليقات البرمجية لتوثيقها
-    apis: ['./routes/*.ts', './server.ts'],
+    apis: ['./src/routes/*.ts', './src/server.ts'],
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);

@@ -54,8 +54,6 @@ const router = Router();
  *       "400":
  *         description: Invalid input
  */
-router.post("/register", register);
-
 router.post("/register", validate(createUserSchema), register);
 router.post("/login" , loginRateLimiter , validate(loginSchema) , login);
 router.post("/refresh" , auth_refresh);
