@@ -3,13 +3,15 @@ import cookieParser from "cookie-parser";
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 import { errorHandler } from './middlewares/errorHandler.js';
 
 import userRoute from './routes/userRoute.js';
 import postRoute from './routes/postRoutes.js';
 import commentRoute from './routes/commentRoutes.js';
-import authRoute from  './routes/authRoutes.js'
+import authRoute from './routes/authRoutes.js'
 
 import { generalRateLimiter } from './middlewares/rateLimiter.js';
 
@@ -31,12 +33,33 @@ app.use(generalRateLimiter);
 
 app.disable("x-powered-by");
 
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Social Media API',
+            version: '1.0.0',
+            description: '',
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+            },
+        ],
+    },
+    // المسارات التي تحتوي على التعليقات البرمجية لتوثيقها
+    apis: ['./routes/*.ts', './server.ts'],
+};
+
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
-app.use("/api" , authRoute);
-app.use("/api/users" , userRoute);
-app.use("/api/posts" , postRoute );
-app.use("/api/comments" , commentRoute);
+
+app.use("/api", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/posts", postRoute);
+app.use("/api/comments", commentRoute);
 
 
 app.use(errorHandler)
