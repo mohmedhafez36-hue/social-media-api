@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build":"tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "test": "dotenv -e .env.test -- node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "db:test:migrate": "dotenv -e .env.test -- prisma migrate deploy"
