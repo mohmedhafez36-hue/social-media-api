@@ -24,6 +24,8 @@
 
 - Logout and token revocation.
 
+- Update password
+
 ### User Management
 - Retrieve user information.
 
@@ -70,11 +72,6 @@ LOVE, FUNNY, and SAD.
 - Test coverage reporting.
 
 - Continuous Integration (CI) using GitHub Actions.
-
-
-
-
-
 
 
 ## Tech Stack
