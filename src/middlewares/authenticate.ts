@@ -16,7 +16,10 @@ export const authenticate = (
             token,
             process.env.JWT_SECRET!
         );
-        req.user = decode;
+        if (typeof decode === "string" || typeof decode.userId !== "string") {
+            throw new AppError("Invalid or expired token", 401);
+        }
+        req.user = decode as jwt.JwtPayload & { userId: string };
         next();
     }
     catch(err){

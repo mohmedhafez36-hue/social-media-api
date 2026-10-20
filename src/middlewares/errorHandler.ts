@@ -1,6 +1,16 @@
 import { Request, Response, NextFunction } from "express";
-import { Prisma } from "../../generated/prisma/client";
 import { AppError } from "../utils/AppError.js";
+
+type PrismaKnownRequestError = Error & {
+    code: string;
+    meta?: Record<string, unknown>;
+};
+
+const isPrismaKnownRequestError = (err: unknown): err is PrismaKnownRequestError =>
+    err instanceof Error &&
+    err.name === "PrismaClientKnownRequestError" &&
+    "code" in err &&
+    typeof err.code === "string";
 
 export const errorHandler = (
     err: unknown,
@@ -19,15 +29,16 @@ export const errorHandler = (
 
 
     // Prisma
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (isPrismaKnownRequestError(err)) {
+        const prismaError = err;
 
-        switch (err.code) {
+        switch (prismaError.code) {
 
             case "P2002":
                 return res.status(409).json({
                     status: "fail",
                     message: "Unique field already exists",
-                    field: err.meta?.target,
+                    field: prismaError.meta?.target,
                 });
 
 
@@ -35,7 +46,7 @@ export const errorHandler = (
                 return res.status(400).json({
                     status: "fail",
                     message: "Referenced record does not exist",
-                    field: err.meta?.field_name,
+                    field: prismaError.meta?.field_name,
                 });
 
 
