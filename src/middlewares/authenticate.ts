@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
 import { AppError } from "../utils/AppError.js";
 
 export const authenticate = (
@@ -16,7 +17,10 @@ export const authenticate = (
             token,
             process.env.JWT_SECRET!
         );
-        req.user = decode;
+        if (typeof decode === "string") {
+            throw new AppError("Invalid or expired token", 401);
+        }
+        req.user = decode as JwtPayload & { userId: string };
         next();
     }
     catch(err){
