@@ -61,7 +61,7 @@ app.use("/api", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/comments", commentRoute);
-app.use("/api/health", healthRoute);
+app.use("/api", healthRoute);
 
 
 app.use(errorHandler)
