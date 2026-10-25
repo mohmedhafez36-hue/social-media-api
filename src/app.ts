@@ -11,7 +11,8 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import userRoute from './routes/userRoute.js';
 import postRoute from './routes/postRoutes.js';
 import commentRoute from './routes/commentRoutes.js';
-import authRoute from './routes/authRoutes.js'
+import authRoute from './routes/authRoutes.js';
+import healthRoute from './routes/healthRoutes.js';
 
 import { generalRateLimiter } from './middlewares/rateLimiter.js';
 
@@ -60,6 +61,7 @@ app.use("/api", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/comments", commentRoute);
+app.use("/api/health", healthRoute);
 
 
 app.use(errorHandler)
